@@ -17,6 +17,7 @@ namespace OpenOnGitHub
     [ProvideAutoLoad(UIContextGuids80.SolutionExists)]
     public sealed class OpenOnGitHubPackage : Package
     {
+        private AnalisisResolver _resolver;
         private static DTE2 _dte;
 
         internal static DTE2 DTE
@@ -36,6 +37,7 @@ namespace OpenOnGitHub
         {
             base.Initialize();
 
+            _resolver = new AnalisisResolver();
             var mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             if (mcs != null)
             {
@@ -60,8 +62,7 @@ namespace OpenOnGitHub
             var command = (OleMenuCommand)sender;
             try
             {
-                // TODO:is should avoid create GitAnalysis every call?
-                using (var git = new GitAnalysis(GetActiveFilePath()))
+                using (var git = _resolver.Resolve(GetActiveFilePath()))
                 {
                     if (!git.IsDiscoveredGitRepository)
                     {
@@ -70,14 +71,14 @@ namespace OpenOnGitHub
                     }
 
                     var type = ToGitHubUrlType(command.CommandID.ID);
-                    var targetPath = git.GetGitHubTargetPath(type);
-                    if (type == GitHubUrlType.CurrentBranch && targetPath == "master")
+                    var targetPath = git.GetGitTargetPath(type);
+                    if (type == UrlTypes.CurrentBranch && targetPath == "master")
                     {
                         command.Visible = false;
                     }
                     else
                     {
-                        command.Text = git.GetGitHubTargetDescription(type);
+                        command.Text = git.GetGitTargetDescription(type);
                         command.Enabled = true;
                     }
                 }
@@ -96,7 +97,7 @@ namespace OpenOnGitHub
             var command = (OleMenuCommand)sender;
             try
             {
-                using (var git = new GitAnalysis(GetActiveFilePath()))
+                using (var git = _resolver.Resolve(GetActiveFilePath()))
                 {
                     if (!git.IsDiscoveredGitRepository)
                     {
@@ -104,7 +105,7 @@ namespace OpenOnGitHub
                     }
                     var selectionLineRange = GetSelectionLineRange();
                     var type = ToGitHubUrlType(command.CommandID.ID);
-                    var gitHubUrl = git.BuildGitHubUrl(type, selectionLineRange);
+                    var gitHubUrl = git.BuildGitUrl(type, selectionLineRange);
                     System.Diagnostics.Process.Start(gitHubUrl); // open browser
                 }
             }
@@ -152,13 +153,13 @@ namespace OpenOnGitHub
             return Tuple.Create(selection.TopPoint.Line, selection.BottomPoint.Line);
         }
 
-        static GitHubUrlType ToGitHubUrlType(int commandId)
+        static UrlTypes ToGitHubUrlType(int commandId)
         {
-            if (commandId == PackageCommanddIDs.OpenMaster) return GitHubUrlType.Master;
-            if (commandId == PackageCommanddIDs.OpenBranch) return GitHubUrlType.CurrentBranch;
-            if (commandId == PackageCommanddIDs.OpenRevision) return GitHubUrlType.CurrentRevision;
-            if (commandId == PackageCommanddIDs.OpenRevisionFull) return GitHubUrlType.CurrentRevisionFull;
-            else return GitHubUrlType.Master;
+            if (commandId == PackageCommanddIDs.OpenMaster) return UrlTypes.Master;
+            if (commandId == PackageCommanddIDs.OpenBranch) return UrlTypes.CurrentBranch;
+            if (commandId == PackageCommanddIDs.OpenRevision) return UrlTypes.CurrentRevision;
+            if (commandId == PackageCommanddIDs.OpenRevisionFull) return UrlTypes.CurrentRevisionFull;
+            else return UrlTypes.Master;
         }
     }
 }

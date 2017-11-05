@@ -8,7 +8,7 @@
             <Menu guid="guidOpenOnGitHubCmdSet" id="SubMenu" priority="0x1000" type="Menu">
                 <Parent guid="guidOpenOnGitHubCmdSet" id="ContextMenuGroup" />
                 <Strings>
-                    <ButtonText>Open on GitHub</ButtonText>
+                    <ButtonText>Show in browser</ButtonText>
                 </Strings>
             </Menu>
         </Menus>

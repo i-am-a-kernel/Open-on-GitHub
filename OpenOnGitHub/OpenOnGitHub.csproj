@@ -36,6 +36,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -159,8 +160,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Analisis\AnalisisResolver.cs" />
+    <Compile Include="Analisis\BitbucketAnalisis.cs" />
+    <Compile Include="Analisis\GitHubAnalisis.cs" />
+    <Compile Include="Analisis\GitAnalisis.cs" />
+    <Compile Include="Analisis\UrlTypes.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="GitAnalysis.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

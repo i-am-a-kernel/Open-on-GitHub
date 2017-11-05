@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("OpenOnGitHub")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("neuecc")]
+[assembly: AssemblyCompany("Arthur Osmokiesku")]
 [assembly: AssemblyProduct("OpenOnGitHub")]
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
